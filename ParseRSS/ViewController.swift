@@ -16,12 +16,13 @@ class ViewController: UIViewController {
     // -- Variables
     var rssParser : RSSParser!
     var rssItems : [RSSItem] = []
-    let rssURL = URL(string:"")!
+    let rssURL = URL(string:"")! // -- Paste your URL here
     
     // -- Lifecile ViewController
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // -- RowHeight dinamyc
         self.newsTableView.estimatedRowHeight = 140
         self.newsTableView.rowHeight = UITableViewAutomaticDimension
         

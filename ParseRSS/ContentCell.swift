@@ -19,7 +19,7 @@ class ContentCell: UITableViewCell {
         self.titleLabel.text = rss.title
         self.dateLabel.text = rss.pubDate
         self.contentLabel.text = rss.description
-        
+        print(rss.imgURL)
     }
 
 }
