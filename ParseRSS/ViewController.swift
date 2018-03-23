@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController {
 
     // -- UI Elements
     @IBOutlet weak var newsTableView: UITableView!
@@ -29,7 +29,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        parse()
+    }
+    
+    fileprivate func parse() {
         self.rssParser = RSSParser()
         self.rssParser.parseWithContentOfURL(rssURL: rssURL) { (items) in
             for item in items{
@@ -39,13 +42,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             DispatchQueue.main.async(execute: {
                 self.newsTableView.reloadData()
             })
-        }        
+        }
     }
 
-    // -- TableView DataSource
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return self.rssItems.count
+        return self.rssItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -57,7 +63,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
         
     }
-
-
+    
 }
 
