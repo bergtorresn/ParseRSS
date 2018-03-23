@@ -12,6 +12,7 @@
 		617CD939206530DF00235A2F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 617CD937206530DF00235A2F /* Main.storyboard */; };
 		617CD93B206530DF00235A2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 617CD93A206530DF00235A2F /* Assets.xcassets */; };
 		617CD93E206530DF00235A2F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 617CD93C206530DF00235A2F /* LaunchScreen.storyboard */; };
+		617CD947206531E700235A2F /* RSSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617CD946206531E700235A2F /* RSSParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		617CD93A206530DF00235A2F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		617CD93D206530DF00235A2F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		617CD93F206530DF00235A2F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		617CD946206531E700235A2F /* RSSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 		617CD945206530EA00235A2F /* Parse */ = {
 			isa = PBXGroup;
 			children = (
+				617CD946206531E700235A2F /* RSSParser.swift */,
 			);
 			path = Parse;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				617CD936206530DF00235A2F /* ViewController.swift in Sources */,
+				617CD947206531E700235A2F /* RSSParser.swift in Sources */,
 				617CD934206530DF00235A2F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -283,6 +287,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = E8FF2KF26N;
 				INFOPLIST_FILE = ParseRSS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rtn.git.ParseRSS;
@@ -297,6 +302,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = E8FF2KF26N;
 				INFOPLIST_FILE = ParseRSS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rtn.git.ParseRSS;

@@ -10,9 +10,19 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var rssParser : RSSParser!
+    let rssURL = URL(string:"http://pox.globo.com/rss/g1/ceara/")!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        self.rssParser = RSSParser()
+        self.rssParser.parseWithContentOfURL(rssURL: rssURL) { (sucess) in
+            if sucess{
+                print(self.rssParser.rssItems)
+            }
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
