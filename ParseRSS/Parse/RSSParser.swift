@@ -23,7 +23,7 @@ class RSSParser: NSObject, XMLParserDelegate {
     var currentDescription = ""
     var currentPubDate = ""
     
-    func parseWithContentOfURL(rssURL : URL, with completion: @escaping (Bool) -> ()) {
+    func parseWithContentOfURL(rssURL : URL, with completion: @escaping ([RSSItem]) -> ()) {
         
         URLSession.shared.dataTask(with: rssURL) { (data, response, err) in
             
@@ -37,7 +37,7 @@ class RSSParser: NSObject, XMLParserDelegate {
             let parse = XMLParser(data: data)
             parse.delegate = self
             if parse.parse(){
-                completion(true)
+                completion(self.rssItems)
             }
             
         }.resume()

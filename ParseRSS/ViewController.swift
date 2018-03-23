@@ -8,26 +8,54 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    // -- UI Elements
+    @IBOutlet weak var newsTableView: UITableView!
+    
+    // -- Variables
     var rssParser : RSSParser!
-    let rssURL = URL(string:"http://pox.globo.com/rss/g1/ceara/")!
+    var rssItems : [RSSItem] = []
+    let rssURL = URL(string:"")!
+    
+    // -- Lifecile ViewController
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.newsTableView.estimatedRowHeight = 140
+        self.newsTableView.rowHeight = UITableViewAutomaticDimension
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.rssParser = RSSParser()
-        self.rssParser.parseWithContentOfURL(rssURL: rssURL) { (sucess) in
-            if sucess{
-                print(self.rssParser.rssItems)
+        self.rssParser.parseWithContentOfURL(rssURL: rssURL) { (items) in
+            for item in items{
+                self.rssItems.append(item)
             }
-        }
-        
+            
+            DispatchQueue.main.async(execute: {
+                self.newsTableView.reloadData()
+            })
+        }        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // -- TableView DataSource
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       return self.rssItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = self.newsTableView.dequeueReusableCell(withIdentifier: "contentCell", for: indexPath) as! ContentCell
+        
+        cell.customCell(rss: self.rssItems[indexPath.row])
+        
+        return cell
+        
     }
 
 
