@@ -9,21 +9,21 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     // -- UI Elements
     @IBOutlet weak var newsTableView: UITableView!
     
     // -- Variables
     var rssParser : RSSParser!
     var rssItems : [RSSItem] = []
-    let rssURL = URL(string:"")! // -- Paste your URL here
+    let rssURL = URL(string:"http://pox.globo.com/rss/g1/ceara/")! // -- Paste your URL here
     
     // -- Lifecile ViewController
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // -- RowHeight dinamyc
-        self.newsTableView.estimatedRowHeight = 140
+        self.newsTableView.estimatedRowHeight = 260
         self.newsTableView.rowHeight = UITableViewAutomaticDimension
         
     }
@@ -45,7 +45,15 @@ class ViewController: UIViewController {
             })
         }
     }
-
+    
+    // -- Check if has image at item
+    func hasImageAtIndex(item: RSSItem) -> Bool {
+        if item.imgURL != ""{
+            return true
+        }
+        return false
+    }
+    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -57,12 +65,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = self.newsTableView.dequeueReusableCell(withIdentifier: "contentCell", for: indexPath) as! ContentCell
+        let item = self.rssItems[indexPath.row]
         
-        cell.customCell(rss: self.rssItems[indexPath.row])
-        
-        return cell
-        
+        if hasImageAtIndex(item: item) {
+            let cellWithImg = ContentCellWithImg.customCell(rss:item, tableView: self.newsTableView, indexPath: indexPath)
+            return cellWithImg
+        } else{
+            let cellWithoutImg = ContentCellWithoutImg.customCell(rss:item, tableView: self.newsTableView, indexPath: indexPath)
+            return cellWithoutImg
+        }
     }
     
 }
