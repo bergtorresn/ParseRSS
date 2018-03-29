@@ -148,11 +148,19 @@
                                         <rect key="frame" x="169" y="283" width="37" height="37"/>
                                         <color key="color" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </activityIndicatorView>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL nil" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4mj-N7-J9S">
+                                        <rect key="frame" x="156.5" y="290.5" width="62.5" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.25490197539999998" green="0.27450981740000002" blue="0.30196079609999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
+                                    <constraint firstItem="4mj-N7-J9S" firstAttribute="centerY" secondItem="tCQ-49-e8z" secondAttribute="centerY" id="Oah-1j-aAb"/>
                                     <constraint firstItem="IKX-1k-ldk" firstAttribute="centerX" secondItem="tCQ-49-e8z" secondAttribute="centerX" id="P0o-JL-oAA"/>
                                     <constraint firstItem="IKX-1k-ldk" firstAttribute="centerY" secondItem="tCQ-49-e8z" secondAttribute="centerY" id="SRC-ZH-I6A"/>
+                                    <constraint firstItem="4mj-N7-J9S" firstAttribute="centerX" secondItem="tCQ-49-e8z" secondAttribute="centerX" id="ecJ-zy-8Ga"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -171,6 +179,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Content" id="yEO-Ll-8kF"/>
                     <connections>
+                        <outlet property="labelInfoURL" destination="4mj-N7-J9S" id="y0g-Nl-Rg9"/>
                         <outlet property="newsTableView" destination="LBa-yl-ZnL" id="GE7-mv-BnW"/>
                         <outlet property="viewLoad" destination="tCQ-49-e8z" id="wXT-np-x5k"/>
                         <outlet property="viewLoadIndicator" destination="IKX-1k-ldk" id="ip6-Re-ybo"/>

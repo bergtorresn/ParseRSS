@@ -10,10 +10,12 @@ import UIKit
 
 class ContentCellWithoutImg: UITableViewCell {
 
+    // -- UI Elements
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     
+    // -- Create Cell
     static func customCell(rss: RSSItem, tableView: UITableView, indexPath: IndexPath) -> ContentCellWithoutImg{
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "contentCellWithoutImg", for: indexPath) as! ContentCellWithoutImg

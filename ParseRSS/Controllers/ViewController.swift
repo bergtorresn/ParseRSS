@@ -14,26 +14,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var newsTableView: UITableView!
     @IBOutlet weak var viewLoad: UIView!
     @IBOutlet weak var viewLoadIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var labelInfoURL: UILabel!
     
     // -- Variables
     var rssParser : RSSParser!
     var rssItems : [RSSItem] = []
-    let rssURL = URL(string:"https://developer.apple.com/news/rss/news.rss")! // -- Paste your URL here
+    let rssURL = URL(string:"") // -- Your URL here
     
-    // -- Lifecile ViewController
+    // -- Lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        
-        self.viewLoadIndicator.startAnimating()
-        
-        
-        
-        // -- RowHeight dinamyc
-        self.newsTableView.estimatedRowHeight = 260
-        self.newsTableView.rowHeight = UITableViewAutomaticDimension
-        
-        
+        initCustomView()
     }
     
     override func viewDidLoad() {
@@ -41,25 +32,12 @@ class ViewController: UIViewController {
         parse()
     }
     
-    fileprivate func parse() {
+    // -- Custom UI Elements
+    fileprivate func initCustomView() {
         
-        self.rssParser = RSSParser()
-        self.rssParser.parseWithContentOfURL(rssURL: rssURL) { (items) in
-            for item in items{
-                self.rssItems.append(item)
-            }
-            
-            DispatchQueue.main.async(execute: {
-                self.viewLoadIndicator.stopAnimating()
-                self.viewLoadIndicator.isHidden = true
-                
-                UIView.animate(withDuration: 2.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                    self.viewLoad.alpha = 0.0
-                }, completion: nil)
-                
-                self.newsTableView.reloadData()
-            })
-        }
+        self.viewLoadIndicator.startAnimating()
+        self.newsTableView.estimatedRowHeight = 260
+        self.newsTableView.rowHeight = UITableViewAutomaticDimension
     }
     
     // -- Check if has image at item
@@ -68,6 +46,41 @@ class ViewController: UIViewController {
             return true
         }
         return false
+    }
+    
+    // -- Hidden Idicator
+    fileprivate func hiddenIndicator() {
+        self.viewLoadIndicator.stopAnimating()
+        self.viewLoadIndicator.isHidden = true
+    }
+    
+    // -- Update View
+    fileprivate func updateView() {
+        DispatchQueue.main.async(execute: {
+            UIView.animate(withDuration: 2.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
+                self.hiddenIndicator()
+                self.viewLoad.alpha = 0.0
+            }, completion: nil)
+            self.newsTableView.reloadData()
+        })
+    }
+    
+    // -- Request
+    fileprivate func parse() {
+        
+        guard self.rssURL != nil else {
+            self.hiddenIndicator()
+            self.labelInfoURL.isHidden = false
+            return
+        }
+        
+        self.rssParser = RSSParser()
+        self.rssParser.parseWithContentOfURL(rssURL: rssURL!) { (items) in
+            for item in items{
+                self.rssItems.append(item)
+            }
+            self.updateView()
+        }
     }
     
 }
@@ -99,7 +112,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let urlEncoded = link.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             let url = URL(string: urlEncoded.replacingOccurrences(of: "%20", with: ""))
-            print(url)
             UIApplication.shared.open(url!, options: [:], completionHandler: nil)
         }
     }

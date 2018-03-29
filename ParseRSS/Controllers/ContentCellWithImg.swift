@@ -10,11 +10,13 @@ import UIKit
 
 class ContentCellWithImg: UITableViewCell {
 
+    // -- UI Elements
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!    
     @IBOutlet weak var contentImg: UIImageView!
     
+    // -- Create Cell
     static func customCell(rss: RSSItem, tableView: UITableView, indexPath: IndexPath) -> ContentCellWithImg {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "contentCellWithImg", for: indexPath) as! ContentCellWithImg
@@ -24,9 +26,11 @@ class ContentCellWithImg: UITableViewCell {
         cell.contentLabel.text = rss.description
         
         loadImageWithURLString(rss.imgURL, cell: cell)
+        
         return cell
     }
     
+    // -- Load image from URL
     static func loadImageWithURLString(_ URLString: String, cell: ContentCellWithImg) {
         
         cell.contentImg.image = nil
