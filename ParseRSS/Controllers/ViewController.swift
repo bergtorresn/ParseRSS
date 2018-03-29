@@ -19,7 +19,7 @@ class ViewController: UIViewController {
     // -- Variables
     var rssParser : RSSParser!
     var rssItems : [RSSItem] = []
-    let rssURL = URL(string:"") // -- Your URL here
+    let rssURL = URL(string:"https://developer.apple.com/news/rss/news.rss") // -- Your URL here
     
     // -- Lifecycle
     override func viewWillAppear(_ animated: Bool) {
