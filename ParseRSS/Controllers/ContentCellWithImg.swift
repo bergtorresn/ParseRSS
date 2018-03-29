@@ -15,9 +15,6 @@ class ContentCellWithImg: UITableViewCell {
     @IBOutlet weak var contentLabel: UILabel!    
     @IBOutlet weak var contentImg: UIImageView!
     
-    @IBOutlet weak var heightImgContent: NSLayoutConstraint! //157
-    @IBOutlet weak var distanceBetweenDateAndContent: NSLayoutConstraint! //173
-    
     static func customCell(rss: RSSItem, tableView: UITableView, indexPath: IndexPath) -> ContentCellWithImg {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "contentCellWithImg", for: indexPath) as! ContentCellWithImg
@@ -26,15 +23,7 @@ class ContentCellWithImg: UITableViewCell {
         cell.dateLabel.text = rss.pubDate
         cell.contentLabel.text = rss.description
         
-        if rss.imgURL == "" {
-            cell.contentImg.isHidden = true
-            cell.heightImgContent.constant = 0.0
-            cell.distanceBetweenDateAndContent.constant = 8.0
-        } else{
-            cell.contentImg.isHidden = false
-            loadImageWithURLString(rss.imgURL, cell: cell)
-        }
-        
+        loadImageWithURLString(rss.imgURL, cell: cell)
         return cell
     }
     

@@ -12,19 +12,27 @@ class ViewController: UIViewController {
     
     // -- UI Elements
     @IBOutlet weak var newsTableView: UITableView!
+    @IBOutlet weak var viewLoad: UIView!
+    @IBOutlet weak var viewLoadIndicator: UIActivityIndicatorView!
     
     // -- Variables
     var rssParser : RSSParser!
     var rssItems : [RSSItem] = []
-    let rssURL = URL(string:"http://pox.globo.com/rss/g1/ceara/")! // -- Paste your URL here
+    let rssURL = URL(string:"https://developer.apple.com/news/rss/news.rss")! // -- Paste your URL here
     
     // -- Lifecile ViewController
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        
+        self.viewLoadIndicator.startAnimating()
+        
+        
+        
         // -- RowHeight dinamyc
         self.newsTableView.estimatedRowHeight = 260
         self.newsTableView.rowHeight = UITableViewAutomaticDimension
+        
         
     }
     
@@ -34,6 +42,7 @@ class ViewController: UIViewController {
     }
     
     fileprivate func parse() {
+        
         self.rssParser = RSSParser()
         self.rssParser.parseWithContentOfURL(rssURL: rssURL) { (items) in
             for item in items{
@@ -41,6 +50,13 @@ class ViewController: UIViewController {
             }
             
             DispatchQueue.main.async(execute: {
+                self.viewLoadIndicator.stopAnimating()
+                self.viewLoadIndicator.isHidden = true
+                
+                UIView.animate(withDuration: 2.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
+                    self.viewLoad.alpha = 0.0
+                }, completion: nil)
+                
                 self.newsTableView.reloadData()
             })
         }
@@ -73,6 +89,18 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         } else{
             let cellWithoutImg = ContentCellWithoutImg.customCell(rss:item, tableView: self.newsTableView, indexPath: indexPath)
             return cellWithoutImg
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let item = self.rssItems[indexPath.row]
+        let link : String = item.link
+        
+        if let urlEncoded = link.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            let url = URL(string: urlEncoded.replacingOccurrences(of: "%20", with: ""))
+            print(url)
+            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
         }
     }
     

@@ -13,6 +13,7 @@ struct RSSItem {
     var description : String
     var pubDate : String
     var imgURL : String
+    var link : String
 }
 
 class RSSParser: NSObject, XMLParserDelegate {
@@ -24,7 +25,8 @@ class RSSParser: NSObject, XMLParserDelegate {
     var currentDescription = ""
     var currentPubDate = ""
     var currentImgURL = ""
-    
+    var currentLink = ""
+
     func parseWithContentOfURL(rssURL : URL, with completion: @escaping ([RSSItem]) -> ()) {
         
         URLSession.shared.dataTask(with: rssURL) { (data, response, err) in
@@ -54,6 +56,7 @@ class RSSParser: NSObject, XMLParserDelegate {
             self.currentDescription = ""
             self.currentPubDate = ""
             self.currentImgURL = ""
+            self.currentLink = ""
         }
     }
     
@@ -72,6 +75,7 @@ class RSSParser: NSObject, XMLParserDelegate {
             break
         case "pubDate": self.currentPubDate += string
             break
+        case "link": self.currentLink += string
         default:
             break
         }
@@ -80,7 +84,7 @@ class RSSParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
         if elementName == "item" {
-            let rssItem = RSSItem(title: self.currentTitle, description: self.currentDescription, pubDate: self.currentPubDate, imgURL: self.currentImgURL)
+            let rssItem = RSSItem(title: self.currentTitle, description: self.currentDescription, pubDate: self.currentPubDate, imgURL: self.currentImgURL, link: self.currentLink)
             self.rssItems.append(rssItem)
         }
     }
