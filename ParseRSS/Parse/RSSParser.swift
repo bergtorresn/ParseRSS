@@ -12,18 +12,22 @@ struct RSSItem {
     var title : String
     var description : String
     var pubDate : String
+    var imgURL : String
+    var link : String
 }
 
 class RSSParser: NSObject, XMLParserDelegate {
- 
+    
     var rssItems : [RSSItem] = []
     
     var currentElement = ""
     var currentTitle = ""
     var currentDescription = ""
     var currentPubDate = ""
-    
-    func parseWithContentOfURL(rssURL : URL, with completion: @escaping (Bool) -> ()) {
+    var currentImgURL = ""
+    var currentLink = ""
+
+    func parseWithContentOfURL(rssURL : URL, with completion: @escaping ([RSSItem]) -> ()) {
         
         URLSession.shared.dataTask(with: rssURL) { (data, response, err) in
             
@@ -37,10 +41,10 @@ class RSSParser: NSObject, XMLParserDelegate {
             let parse = XMLParser(data: data)
             parse.delegate = self
             if parse.parse(){
-                completion(true)
+                completion(self.rssItems)
             }
             
-        }.resume()
+            }.resume()
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
@@ -51,23 +55,36 @@ class RSSParser: NSObject, XMLParserDelegate {
             self.currentTitle = ""
             self.currentDescription = ""
             self.currentPubDate = ""
+            self.currentImgURL = ""
+            self.currentLink = ""
         }
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         
         switch self.currentElement {
-            case "title": self.currentTitle += string
-            case "description": self.currentDescription += string
-            case "pubDate": self.currentPubDate += string
+        case "title": self.currentTitle += string
+            break
+        case "description":
+            let imgURL = Regex.getImgFromContent(string: string)
+            if imgURL != "" {
+                self.currentImgURL += imgURL
+            }
+            let contentWithoutTagImg = Regex.removeTagImgFromContent(string: string)
+            self.currentDescription += contentWithoutTagImg
+            break
+        case "pubDate": self.currentPubDate += string
+            break
+        case "link": self.currentLink += string
         default:
             break
         }
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        if elementName == "title" {
-            let rssItem = RSSItem(title: currentTitle, description: currentDescription, pubDate: currentPubDate)
+        
+        if elementName == "item" {
+            let rssItem = RSSItem(title: self.currentTitle, description: self.currentDescription, pubDate: self.currentPubDate, imgURL: self.currentImgURL, link: self.currentLink)
             self.rssItems.append(rssItem)
         }
     }
