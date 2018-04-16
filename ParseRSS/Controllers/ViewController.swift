@@ -10,21 +10,24 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    // -- UI Elements
+    // MARK - UI Elements
+    
     @IBOutlet weak var newsTableView: UITableView!
     @IBOutlet weak var viewLoad: UIView!
     @IBOutlet weak var viewLoadIndicator: UIActivityIndicatorView!
     @IBOutlet weak var labelInfoURL: UILabel!
     
-    // -- Variables
+    // MARK -  Variables
+    
     var rssParser : RSSParser!
     var rssItems : [RSSItem] = []
-    let rssURL = URL(string:"") // -- Your URL here
+    let rssURL = URL(string:"http://pox.globo.com/rss/g1/ceara/") // -- Your URL here
     
-    // -- Lifecycle
+    // MARK -  Lifecycle
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        initCustomView()
+        customTableView()
     }
     
     override func viewDidLoad() {
@@ -32,15 +35,13 @@ class ViewController: UIViewController {
         parse()
     }
     
-    // -- Custom UI Elements
-    fileprivate func initCustomView() {
-        
-        self.viewLoadIndicator.startAnimating()
+    // MARK - Custom View
+    
+    fileprivate func customTableView() {
         self.newsTableView.estimatedRowHeight = 260
         self.newsTableView.rowHeight = UITableViewAutomaticDimension
     }
     
-    // -- Check if has image at item
     func hasImageAtIndex(item: RSSItem) -> Bool {
         if item.imgURL != ""{
             return true
@@ -48,14 +49,12 @@ class ViewController: UIViewController {
         return false
     }
     
-    // -- Hidden Idicator
     fileprivate func hiddenIndicator() {
         self.viewLoadIndicator.stopAnimating()
         self.viewLoadIndicator.isHidden = true
     }
     
-    // -- Update View
-    fileprivate func updateView() {
+    fileprivate func showView() {
         DispatchQueue.main.async(execute: {
             UIView.animate(withDuration: 2.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
                 self.hiddenIndicator()
@@ -65,7 +64,7 @@ class ViewController: UIViewController {
         })
     }
     
-    // -- Request
+    // MARK - Request
     fileprivate func parse() {
         
         guard self.rssURL != nil else {
@@ -79,11 +78,13 @@ class ViewController: UIViewController {
             for item in items{
                 self.rssItems.append(item)
             }
-            self.updateView()
+            self.showView()
         }
     }
     
 }
+
+// MARK - UITableViewDataSource/Delegate
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -111,10 +112,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let link : String = item.link
         
         if let urlEncoded = link.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            let url = URL(string: urlEncoded.replacingOccurrences(of: "%20", with: ""))
-            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+
+            guard let url = URL(string: urlEncoded) else {
+                return //be safe
+            }
+            
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
         }
     }
-    
 }
 

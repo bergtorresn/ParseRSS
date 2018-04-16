@@ -10,19 +10,25 @@ import UIKit
 
 class ContentCellWithoutImg: UITableViewCell {
 
-    // -- UI Elements
+    // MARK - UI Elements
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     
-    // -- Create Cell
+    //  MARK - Create Cell
     static func customCell(rss: RSSItem, tableView: UITableView, indexPath: IndexPath) -> ContentCellWithoutImg{
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "contentCellWithoutImg", for: indexPath) as! ContentCellWithoutImg
 
         cell.titleLabel.text = rss.title
-        cell.dateLabel.text = rss.pubDate
         cell.contentLabel.text = rss.description
+        
+        let date = FormattedDate.dateFormmatter(stringDate: rss.pubDate)
+        if date != "" {
+            cell.dateLabel.text = date
+        } else{
+            cell.dateLabel.text = rss.pubDate
+        }
         
         return cell
     }

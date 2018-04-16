@@ -7,55 +7,45 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ContentCellWithImg: UITableViewCell {
 
-    // -- UI Elements
+    // MARK - UI Elements
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!    
     @IBOutlet weak var contentImg: UIImageView!
     
-    // -- Create Cell
+    // MARK - Create Cell
+
+    
     static func customCell(rss: RSSItem, tableView: UITableView, indexPath: IndexPath) -> ContentCellWithImg {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "contentCellWithImg", for: indexPath) as! ContentCellWithImg
         
+        let date = FormattedDate.dateFormmatter(stringDate: rss.pubDate)
+        if date != "" {
+            cell.dateLabel.text = date
+        } else{
+            cell.dateLabel.text = rss.pubDate
+        }
+        
         cell.titleLabel.text = rss.title
-        cell.dateLabel.text = rss.pubDate
         cell.contentLabel.text = rss.description
         
-        loadImageWithURLString(rss.imgURL, cell: cell)
+        loadImageWithURL(urlImg: rss.imgURL, cell: cell)
         
         return cell
     }
     
-    // -- Load image from URL
-    static func loadImageWithURLString(_ URLString: String, cell: ContentCellWithImg) {
+    /// Load image from URL
+    static func loadImageWithURL(urlImg: String, cell: ContentCellWithImg) {
         
-        cell.contentImg.image = nil
-
-        if let url = URL(string: URLString) {
-            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-                
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    return
-                }
-                if httpResponse.statusCode == 200 {
-                    
-                    if let data = data {
-                        if let downloadedImage = UIImage(data: data) {
-                            DispatchQueue.main.async {
-                                cell.contentImg.image = downloadedImage
-                            }
-                        }
-                    }
-                } else {
-                    cell.contentImg.image = #imageLiteral(resourceName: "placeholder.png")
-                }
-            }).resume()
-        } else {
-            cell.contentImg.image = #imageLiteral(resourceName: "placeholder.png")
+        cell.contentImg.sd_setImage(with: URL(string: urlImg), placeholderImage: #imageLiteral(resourceName: "placeholder"), options: SDWebImageOptions.continueInBackground) { (img, err, type, url) in
+            if let error = err {
+                fatalError("***** loadImageWithURL: \(error)")
+            }
         }
     }
 
