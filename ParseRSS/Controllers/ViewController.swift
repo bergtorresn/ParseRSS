@@ -19,7 +19,7 @@ class ViewController: UIViewController {
     // -- Variables
     var rssParser : RSSParser!
     var rssItems : [RSSItem] = []
-    let rssURL = URL(string:"https://developer.apple.com/news/rss/news.rss") // -- Your URL here
+    let rssURL = URL(string:"http://pox.globo.com/rss/g1/ceara/") // -- Your URL here
     
     // -- Lifecycle
     override func viewWillAppear(_ animated: Bool) {
@@ -112,7 +112,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let urlEncoded = link.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             let url = URL(string: urlEncoded.replacingOccurrences(of: "%20", with: ""))
-            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+            } else {
+                // Fallback on earlier versions
+            }
         }
     }
     

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ContentCellWithImg: UITableViewCell {
 
@@ -25,37 +26,18 @@ class ContentCellWithImg: UITableViewCell {
         cell.dateLabel.text = rss.pubDate
         cell.contentLabel.text = rss.description
         
-        loadImageWithURLString(rss.imgURL, cell: cell)
+        loadImageWithURL(urlImg: rss.imgURL, cell: cell)
         
         return cell
     }
     
     // -- Load image from URL
-    static func loadImageWithURLString(_ URLString: String, cell: ContentCellWithImg) {
+    static func loadImageWithURL(urlImg: String, cell: ContentCellWithImg) {
         
-        cell.contentImg.image = nil
-
-        if let url = URL(string: URLString) {
-            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-                
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    return
-                }
-                if httpResponse.statusCode == 200 {
-                    
-                    if let data = data {
-                        if let downloadedImage = UIImage(data: data) {
-                            DispatchQueue.main.async {
-                                cell.contentImg.image = downloadedImage
-                            }
-                        }
-                    }
-                } else {
-                    cell.contentImg.image = #imageLiteral(resourceName: "placeholder.png")
-                }
-            }).resume()
-        } else {
-            cell.contentImg.image = #imageLiteral(resourceName: "placeholder.png")
+        cell.contentImg.sd_setImage(with: URL(string: urlImg), placeholderImage: #imageLiteral(resourceName: "placeholder"), options: SDWebImageOptions.continueInBackground) { (img, err, type, url) in
+            if let error = err {
+                fatalError("***** loadImageWithURL: \(error)")
+            }
         }
     }
 
