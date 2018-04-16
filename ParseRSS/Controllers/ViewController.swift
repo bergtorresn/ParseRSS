@@ -116,8 +116,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(url!, options: [:], completionHandler: nil)
             } else {
-                // Fallback on earlier versions
+                UIApplication.shared.openURL(url!)
+
             }
+           
         }
     }
     
