@@ -11,19 +11,27 @@ import SDWebImage
 
 class ContentCellWithImg: UITableViewCell {
 
-    // -- UI Elements
+    // MARK - UI Elements
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!    
     @IBOutlet weak var contentImg: UIImageView!
     
-    // -- Create Cell
+    // MARK - Create Cell
+
+    
     static func customCell(rss: RSSItem, tableView: UITableView, indexPath: IndexPath) -> ContentCellWithImg {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "contentCellWithImg", for: indexPath) as! ContentCellWithImg
         
+        let date = FormattedDate.dateFormmatter(stringDate: rss.pubDate)
+        if date != "" {
+            cell.dateLabel.text = date
+        } else{
+            cell.dateLabel.text = rss.pubDate
+        }
+        
         cell.titleLabel.text = rss.title
-        cell.dateLabel.text = rss.pubDate
         cell.contentLabel.text = rss.description
         
         loadImageWithURL(urlImg: rss.imgURL, cell: cell)
@@ -31,7 +39,7 @@ class ContentCellWithImg: UITableViewCell {
         return cell
     }
     
-    // -- Load image from URL
+    /// Load image from URL
     static func loadImageWithURL(urlImg: String, cell: ContentCellWithImg) {
         
         cell.contentImg.sd_setImage(with: URL(string: urlImg), placeholderImage: #imageLiteral(resourceName: "placeholder"), options: SDWebImageOptions.continueInBackground) { (img, err, type, url) in
